@@ -3,16 +3,16 @@ services:
     build: .
     image: bigdata-ecosystem:latest
     # Đổi hostname và container_name tương ứng trên từng laptop:
-    # Máy 1: hoanganh24162006-master | Máy 2: binh-slave1 | Máy 3: trung-slave2 | Máy 4: dung-slave3
-    hostname: hoanganh24162006-master
-    container_name: hoanganh24162006-master
+    # Máy 1: anh24162006-master | Máy 2: hoc-slave1 | Máy 3: loc-slave2 | Máy 4: anh24133004-slave3
+    hostname: anh24162006-master
+    container_name: anh24162006-master
     environment:
       - NODE_ROLE=master # Đổi thành 'slave' trên 3 máy Slave
     extra_hosts:
-      - "hoanganh24162006-master:100.78.41.97"
-      - "binh-slave1:100.107.35.102"
-      - "trung-slave2:100.119.119.92"
-      - "dung-slave3:100.112.244.83"
+      - "anh24162006-master:100.105.99.31"
+      - "hoc-slave1:100.123.200.77"
+      - "loc-slave2:100.119.119.92"
+      - "anh24133004-slave3:100.112.244.83"
     ports:
       - "22:22"         # SSH giữa các node
       - "9000:9000"     # HDFS NameNode RPC
