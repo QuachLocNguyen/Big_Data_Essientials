@@ -26,12 +26,12 @@ RUN mkdir -p /run/sshd && \
 # Bung bộ cài Offline từ Host vào Container
 ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/hadoop-3.5.0.tar.gz /home/${HADOOP_USER}/
 ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/spark-4.2.0-bin-hadoop3.gz /home/${HADOOP_USER}/
-ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/apache-hive-4.2.1-bin.tar.gz /home/${HADOOP_USER}/
+ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/apache-hive-4.1.0-bin.tar.gz /home/${HADOOP_USER}/
 
 WORKDIR /home/${HADOOP_USER}
 RUN mv hadoop-3.5.0 hadoop && \
     mv spark-4.2.0-bin-hadoop3 spark && \
-    mv apache-hive-4.2.1-bin hive && \
+    mv apache-hive-4.1.0-bin hive && \
     mkdir -p hadoop/hdfs/namenode hadoop/hdfs/datanode hadoop/nm-local-dir hadoop/logs && \
     chown -R ${HADOOP_USER}:${HADOOP_USER} /home/${HADOOP_USER}
 
