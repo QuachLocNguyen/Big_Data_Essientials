@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/home/hadoopanh24162006/hadoop/hdfs/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/home/hadoopanh24162006/hadoop/hdfs/datanode</value>
+    </property>
+    <property>
+        <name>dfs.blocksize</name>
+        <value>268435456</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.servicerpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.datanode.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
+</configuration>
