@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+# Cấu hình SSH chạy trên port 2222 (tránh xung đột port 22 của máy host và tăng bảo mật)
+grep -q "^Port 2222" /etc/ssh/sshd_config || echo "Port 2222" >> /etc/ssh/sshd_config
+grep -q "Port 2222" /etc/ssh/ssh_config || echo "    Port 2222" >> /etc/ssh/ssh_config
+grep -q "HADOOP_SSH_OPTS" /home/hadoophoanganh24162006/hadoop/etc/hadoop/hadoop-env.sh || \
+    echo 'export HADOOP_SSH_OPTS="-p 2222"' >> /home/hadoophoanganh24162006/hadoop/etc/hadoop/hadoop-env.sh
+
 # Khởi động SSH daemon
 service ssh start
 

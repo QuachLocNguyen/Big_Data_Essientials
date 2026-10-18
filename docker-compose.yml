@@ -11,10 +11,10 @@ services:
     extra_hosts:
       - "hoanganh24162006-master:100.105.99.31"
       - "hoc-slave1:100.123.200.77"
-      - "nguyen-slave2:100.119.119.92"
+      - "locnguyen21139037-slave2:100.106.204.115"
       - "hoanganh24133004-slave3:100.112.244.83"
     ports:
-      - "22:22"         # SSH giữa các node
+      - "2222:2222"     # SSH giữa các node (dùng port 2222 để an toàn, tránh trùng port 22 của máy thật)
       - "9000:9000"     # HDFS NameNode RPC
       - "9870:9870"     # HDFS NameNode Web UI
       - "9864:9864"     # HDFS DataNode Web UI
@@ -33,6 +33,7 @@ services:
       - "8080:8080"     # Spark Master Web UI
       - "4040:4040"     # Spark Application UI
     volumes:
+      - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
       - ./config/core-site.xml:/home/hadoophoanganh24162006/hadoop/etc/hadoop/core-site.xml
       - ./config/hdfs-site.xml:/home/hadoophoanganh24162006/hadoop/etc/hadoop/hdfs-site.xml
       - ./config/yarn-site.xml:/home/hadoophoanganh24162006/hadoop/etc/hadoop/yarn-site.xml

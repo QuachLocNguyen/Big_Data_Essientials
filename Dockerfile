@@ -13,11 +13,13 @@ RUN useradd -m -s /bin/bash ${HADOOP_USER} && \
     usermod -aG sudo ${HADOOP_USER} && \
     echo "${HADOOP_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Cấu hình SSH
+# Cấu hình SSH (sử dụng port 2222)
 RUN mkdir -p /run/sshd && \
     su - ${HADOOP_USER} -c "ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
     chmod 600 ~/.ssh/authorized_keys" && \
+    echo "Port 2222" >> /etc/ssh/sshd_config && \
+    echo "    Port 2222" >> /etc/ssh/ssh_config && \
     echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
     echo "    UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
 
