@@ -1,3 +1,18 @@
+# Bỏ qua các bộ cài đặt nặng (tải riêng vào máy Host)
+offline_pkgs/*.tar.gz
+offline_pkgs/*.tgz
+offline_pkgs/*.zip
+offline_pkgs/*.gz
+
+# Bỏ qua dữ liệu quá lớn (> 50MB) nếu có
+test_bigdata/data/*.txt
+test_bigdata/data/*_big.csv
+
+# Bỏ qua thư mục tạm của Hive/Hadoop nếu lỡ sinh ra ngoài Host
+metastore_db/
+derby.log
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -218,3 +233,4 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+

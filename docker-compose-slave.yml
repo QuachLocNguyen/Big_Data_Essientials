@@ -1,0 +1,47 @@
+services:
+  hadoop-node:
+    build: .
+    image: bigdata-ecosystem:latest
+    # Đổi hostname và container_name tương ứng trên từng laptop:
+    # Máy 1: hoanganh24162006-master | Máy 2: binh-slave1 | Máy 3: trung-slave2 | Máy 4: dung-slave3
+    hostname: hoanganh24162006-master
+    container_name: hoanganh24162006-master
+    environment:
+      - NODE_ROLE=master # Đổi thành 'slave' trên 3 máy Slave
+    extra_hosts:
+      - "hoanganh24162006-master:100.78.41.97"
+      - "binh-slave1:100.107.35.102"
+      - "trung-slave2:100.119.119.92"
+      - "dung-slave3:100.112.244.83"
+    ports:
+      - "22:22"         # SSH giữa các node
+      - "9000:9000"     # HDFS NameNode RPC
+      - "9870:9870"     # HDFS NameNode Web UI
+      - "9864:9864"     # HDFS DataNode Web UI
+      - "9866:9866"     # HDFS DataNode Data Transfer
+      - "9867:9867"     # HDFS DataNode IPC
+      - "8030:8030"     # YARN ResourceManager Scheduler
+      - "8031:8031"     # YARN ResourceManager Tracker
+      - "8032:8032"     # YARN ResourceManager Address
+      - "8033:8033"     # YARN ResourceManager Admin
+      - "8088:8088"     # YARN ResourceManager Web UI
+      - "8042:8042"     # YARN NodeManager Web UI
+      - "10020:10020"   # MapReduce JobHistory RPC
+      - "19888:19888"   # MapReduce JobHistory Web UI
+      - "10000:10000"   # HiveServer2
+      - "7077:7077"     # Spark Standalone Master
+      - "8080:8080"     # Spark Master Web UI
+      - "4040:4040"     # Spark Application UI
+    volumes:
+      - ./config/core-site.xml:/home/hadoopnhom/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoopnhom/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoopnhom/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoopnhom/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/workers:/home/hadoopnhom/hadoop/etc/hadoop/workers
+      - ./config/hive-site.xml:/home/hadoopnhom/hive/conf/hive-site.xml
+      - ./test_bigdata:/home/hadoopnhom/test_bigdata
+      - hadoop_data:/home/hadoopnhom/hadoop/hdfs
+    restart: unless-stopped
+
+volumes:
+  hadoop_data:
