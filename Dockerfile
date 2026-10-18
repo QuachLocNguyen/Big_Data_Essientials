@@ -23,15 +23,17 @@ RUN mkdir -p /run/sshd && \
 
 # Bung bộ cài Offline từ Host vào Container
 ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/hadoop-3.5.0.tar.gz /home/${HADOOP_USER}/
-ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/spark-4.2.0-bin-hadoop3.tgz /home/${HADOOP_USER}/
+ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/spark-4.2.0-bin-hadoop3.gz /home/${HADOOP_USER}/
 ADD --chown=${HADOOP_USER}:${HADOOP_USER} offline_pkgs/apache-hive-4.2.1-bin.tar.gz /home/${HADOOP_USER}/
 
-USER ${HADOOP_USER}
 WORKDIR /home/${HADOOP_USER}
 RUN mv hadoop-3.5.0 hadoop && \
     mv spark-4.2.0-bin-hadoop3 spark && \
     mv apache-hive-4.2.1-bin hive && \
-    mkdir -p ~/hadoop/hdfs/namenode ~/hadoop/hdfs/datanode ~/hadoop/nm-local-dir ~/hadoop/logs
+    mkdir -p hadoop/hdfs/namenode hadoop/hdfs/datanode hadoop/nm-local-dir hadoop/logs && \
+    chown -R ${HADOOP_USER}:${HADOOP_USER} /home/${HADOOP_USER}
+
+USER ${HADOOP_USER}
 
 # Khai báo biến môi trường
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -63,8 +65,16 @@ RUN echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bashrc && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> ${HADOOP_CONF_DIR}/hadoop-env.sh && \
     echo "export HADOOP_HOME=${HADOOP_HOME}" >> ${HIVE_HOME}/conf/hive-env.sh
 
-USER root
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+    USER root
+    # Đảm bảo mọi phiên login (kể cả SSH và non-interactive) đều có biến môi trường
+    RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile.d/hadoop.sh && \
+        echo "export HADOOP_HOME=${HADOOP_HOME}" >> /etc/profile.d/hadoop.sh && \
+        echo "export HIVE_HOME=${HIVE_HOME}" >> /etc/profile.d/hadoop.sh && \
+        echo "export SPARK_HOME=${SPARK_HOME}" >> /etc/profile.d/hadoop.sh && \
+        echo "export PATH=\$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:${HIVE_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin" >> /etc/profile.d/hadoop.sh && \
+        chmod +x /etc/profile.d/hadoop.sh
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+    COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+    RUN chmod +x /usr/local/bin/entrypoint.sh
+
+    ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

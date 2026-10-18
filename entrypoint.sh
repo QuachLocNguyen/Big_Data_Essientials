@@ -11,7 +11,7 @@ if [ "$NODE_ROLE" = "master" ]; then
     # Chỉ format NameNode nếu thư mục current chưa tồn tại (tránh lỗi Incompatible clusterIDs)
     if [ ! -d "/home/hadoopanh24162006/hadoop/hdfs/namenode/current" ]; then
         echo "=== Formatting NameNode for the first time ==="
-        su - hadoopanh24162006 -c "hdfs namenode -format -force"
+        su - hadoopanh24162006 -c "/home/hadoopanh24162006/hadoop/bin/hdfs namenode -format -force"
     fi
 fi
 
