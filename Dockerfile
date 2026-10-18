@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ARG HADOOP_USER=hadoophoanganh24162006
 RUN useradd -m -s /bin/bash ${HADOOP_USER} && \
-    echo "${HADOOP_USER}:hadoop" | chpasswd && \
+    echo "${HADOOP_USER}:hadoophoanganh24162006" | chpasswd && \
     usermod -aG sudo ${HADOOP_USER} && \
     echo "${HADOOP_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 

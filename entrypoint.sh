@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Đồng bộ mật khẩu user hadoophoanganh24162006
+echo "hadoophoanganh24162006:hadoophoanganh24162006" | chpasswd
+
 # Cấu hình SSH chạy trên port 2222 (tránh xung đột port 22 của máy host và tăng bảo mật)
 grep -q "^Port 2222" /etc/ssh/sshd_config || echo "Port 2222" >> /etc/ssh/sshd_config
 grep -q "Port 2222" /etc/ssh/ssh_config || echo "    Port 2222" >> /etc/ssh/ssh_config
