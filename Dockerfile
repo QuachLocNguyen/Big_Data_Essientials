@@ -7,9 +7,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iputils-ping net-tools nano curl sudo \
     && rm -rf /var/lib/apt/lists/*
 
-ARG HADOOP_USER=hadoophoanganh24162006
+# User chung cho Master
+ARG HADOOP_USER=hadoopanh24162006
 RUN useradd -m -s /bin/bash ${HADOOP_USER} && \
-    echo "${HADOOP_USER}:hadoophoanganh24162006" | chpasswd && \
+    echo "${HADOOP_USER}:hadoopanh24162006" | chpasswd && \
     usermod -aG sudo ${HADOOP_USER} && \
     echo "${HADOOP_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 

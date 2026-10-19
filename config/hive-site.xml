@@ -2,7 +2,7 @@
 <configuration>
     <property>
         <name>hive.exec.local.scratchdir</name>
-        <value>/tmp/hive/hadoophoanganh24162006</value>
+        <value>/tmp/hive/hadoopanh24162006</value>
     </property>
     <property>
         <name>hive.downloaded.resources.dir</name>
@@ -10,11 +10,11 @@
     </property>
     <property>
         <name>hive.querylog.location</name>
-        <value>/tmp/hive/hadoophoanganh24162006</value>
+        <value>/tmp/hive/hadoopanh24162006</value>
     </property>
     <property>
         <name>hive.server2.logging.operation.log.location</name>
-        <value>/tmp/hive/hadoophoanganh24162006/operation_logs</value>
+        <value>/tmp/hive/hadoopanh24162006/operation_logs</value>
     </property>
     <property>
         <name>hive.metastore.warehouse.dir</name>
@@ -22,7 +22,7 @@
     </property>
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:derby:;databaseName=/home/hadoophoanganh24162006/hive/metastore_db;create=true</value>
+        <value>jdbc:derby:;databaseName=/home/hadoopanh24162006/hive/metastore_db;create=true</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
