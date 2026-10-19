@@ -2,7 +2,7 @@
 <configuration>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hoanganh24162006-master</value>
+        <value>anh24162006-master</value>
     </property>
     <property>
         <name>yarn.resourcemanager.bind-host</name>
