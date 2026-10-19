@@ -6,11 +6,11 @@
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>/home/hadoopanh24162006/hadoop/hdfs/namenode</value>
+        <value>/home/hadoophoanganh24162006/hadoop/hdfs/namenode</value>
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>/home/hadoopanh24162006/hadoop/hdfs/datanode</value>
+        <value>/home/hadoophoanganh24162006/hadoop/hdfs/datanode</value>
     </property>
     <property>
         <name>dfs.blocksize</name>
