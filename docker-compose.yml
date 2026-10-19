@@ -6,6 +6,7 @@ services:
     # Máy 1: anh24162006-master | Máy 2: hoc-slave1 | Máy 3: nguyen-slave2 | Máy 4: anh24133004-slave3
     hostname: anh24162006-master
     container_name: anh24162006-master
+    entrypoint: ["/bin/bash", "-c", "tr -d '\\r' < /usr/local/bin/entrypoint.sh | /bin/bash"]
     environment:
       - NODE_ROLE=master # Đổi thành 'slave' trên 3 máy Slave
     extra_hosts:

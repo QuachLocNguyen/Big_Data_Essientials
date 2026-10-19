@@ -10,7 +10,7 @@ spark = SparkSession.builder \
 sc = spark.sparkContext
 
 # 1. Đọc file văn bản từ HDFS
-lines = sc.textFile("hdfs://hoanganh24162006-master:9000/test_bigdata/input/input_text_big.txt")
+lines = sc.textFile("hdfs://anh24162006-master:9000/test_bigdata/input/input_text_big.txt")
 
 # 2. Bước MAP: Tách từng dòng thành các từ và gán mỗi từ thành cặp (word, 1)
 words = lines.flatMap(lambda line: line.split())

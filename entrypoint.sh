@@ -10,6 +10,15 @@ grep -q "Port 2222" /etc/ssh/ssh_config || echo "    Port 2222" >> /etc/ssh/ssh_
 grep -q "HADOOP_SSH_OPTS" /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh || \
     echo 'export HADOOP_SSH_OPTS="-p 2222"' >> /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh
 
+# Tránh trùng cặp (NAT_IP:xferPort) khi 3 DataNode đi qua Docker Bridge NAT về Master
+if [ "$(hostname)" = "nguyen-slave2" ]; then
+    grep -q "HDFS_DATANODE_OPTS" /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh || \
+        echo 'export HDFS_DATANODE_OPTS="-Ddfs.datanode.address=0.0.0.0:10020"' >> /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh
+elif [ "$(hostname)" = "anh24133004-slave3" ]; then
+    grep -q "HDFS_DATANODE_OPTS" /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh || \
+        echo 'export HDFS_DATANODE_OPTS="-Ddfs.datanode.address=0.0.0.0:19888"' >> /home/hadoopanh24162006/hadoop/etc/hadoop/hadoop-env.sh
+fi
+
 # Khởi động SSH daemon
 service ssh start
 
