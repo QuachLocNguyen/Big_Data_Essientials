@@ -36,4 +36,8 @@
         <name>mapreduce.job.ubertask.enable</name>
         <value>true</value>
     </property>
+    <property>
+        <name>yarn.app.mapreduce.am.job.client.port-range</name>
+        <value>8031-8032</value>
+    </property>
 </configuration>

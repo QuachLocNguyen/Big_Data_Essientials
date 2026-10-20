@@ -102,12 +102,18 @@ Trong quá trình job đang chạy trên Slave và ngay sau khi job vừa hoàn 
 2. Lúc vừa chạy xong: `Redirecting to job history server` và `Retrying connect to server: anh24162006-master/172.18.0.2:10020`
 
 ### Nguyên nhân & Giải pháp
-1. **Kết nối tới cổng động của `MRAppMaster` trên Slave (`nguyen-slave2:36267`):**
-   - Tiến trình `MRAppMaster` được YARN khởi tạo bên trong container của máy `nguyen-slave2` mở một cổng RPC ngẫu nhiên (`36267`) để báo cáo phần trăm tiến độ trực tiếp cho Client.
-   - Dù Client trên Master không kết nối trực tiếp vào cổng ngẫu nhiên này, **`MRAppMaster` trên máy Slave vẫn thực thi xong 100% công việc và báo cáo trạng thái `FinalApplicationStatus=SUCCEEDED` về cho `ResourceManager` trên Master**. Ngay khi nhận được tín hiệu hoàn tất từ `ResourceManager`, Client lập tức chuyển sang bước đọc kết quả.
+1. **Kết nối tới cổng động của `MRAppMaster` trên Slave (`nguyen-slave2:41379`):**
+   - Mặc định, tiến trình `MRAppMaster` được YARN khởi tạo bên trong container của máy Slave (`nguyen-slave2`) sẽ mở một cổng RPC ngẫu nhiên (`41379` hoặc `36267`) để báo cáo phần trăm tiến độ trực tiếp cho Client. Vì cổng ngẫu nhiên này không nằm trong danh sách port được mở của `docker-compose.yml`, Client trên Master không kết nối trực tiếp vào được mà phải đợi `MRAppMaster` chạy xong.
+   - **Cách khắc phục triệt để:** Cố định dải cổng RPC của `MRAppMaster` trong `config/mapred-site.xml` vào cổng `8031-8032` (đã được mở sẵn trong `docker-compose.yml` và hoàn toàn trống trên các máy Slave):
+     ```xml
+     <property>
+         <name>yarn.app.mapreduce.am.job.client.port-range</name>
+         <value>8031-8032</value>
+     </property>
+     ```
 2. **Kết nối tới `JobHistoryServer` (`anh24162006-master:10020`):**
-   - Lệnh `start-all.sh` mặc định chỉ khởi động các tiến trình của HDFS và YARN, **không tự động bật `JobHistoryServer`** (lắng nghe ở cổng `10020`).
-   - Để tắt hoàn toàn việc chờ kết nối tới cổng `10020` sau khi chạy xong job MapReduce, chỉ cần bật thêm `JobHistoryServer` trên máy Master (`anh24162006-master`):
+   - Lệnh `start-all.sh` mặc định chỉ khởi động các tiến trình của HDFS và YARN, **không tự động bật `JobHistoryServer`** (lắng nghe ở cổng `10020`). Khi job kết thúc mà Client chưa lấy được báo cáo trực tiếp từ `MRAppMaster`, nó sẽ chuyển hướng sang gọi `anh24162006-master:10020` 30 lần và báo `Connection refused`.
+   - **Cách khắc phục triệt để:** Bật dịch vụ `JobHistoryServer` trên máy Master (`anh24162006-master`):
      ```bash
      mapred --daemon start historyserver
      ```
