@@ -1,6 +1,6 @@
 # =====================================================================
 # BÀI 1 (MASTER): WORD COUNT BẰNG PYSPARK MAPREDUCE
-# Sinh viên thực hiện: Lê Đặng Hoàng Anh - 24162006 (hoanganh24162006-master)
+# Sinh viên thực hiện: Lê Đặng Hoàng Anh - 24162006 (anh24162006-master)
 # =====================================================================
 from pyspark.sql import SparkSession
 

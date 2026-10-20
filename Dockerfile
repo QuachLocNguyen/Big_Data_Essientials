@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iputils-ping net-tools nano curl sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# User chung cho Master
+# User chung cho toàn cụm
 ARG HADOOP_USER=hadoopanh24162006
 RUN useradd -m -s /bin/bash ${HADOOP_USER} && \
     echo "${HADOOP_USER}:hadoopanh24162006" | chpasswd && \
@@ -36,9 +36,7 @@ RUN mv hadoop-3.5.0 hadoop && \
     mkdir -p hadoop/hdfs/namenode hadoop/hdfs/datanode hadoop/nm-local-dir hadoop/logs && \
     chown -R ${HADOOP_USER}:${HADOOP_USER} /home/${HADOOP_USER}
 
-USER ${HADOOP_USER}
-
-# Khai báo biến môi trường
+# Khai báo biến môi trường hệ thống
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV HADOOP_HOME=/home/${HADOOP_USER}/hadoop
 ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
@@ -52,32 +50,28 @@ ENV PYSPARK_PYTHON=/usr/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/bin/python3
 ENV PATH=$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:${HIVE_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin
 
-RUN echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bashrc && \
-    echo "export HADOOP_HOME=${HADOOP_HOME}" >> ~/.bashrc && \
-    echo "export HADOOP_CONF_DIR=${HADOOP_CONF_DIR}" >> ~/.bashrc && \
-    echo "export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME}" >> ~/.bashrc && \
-    echo "export HADOOP_COMMON_HOME=${HADOOP_COMMON_HOME}" >> ~/.bashrc && \
-    echo "export HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME}" >> ~/.bashrc && \
-    echo "export HADOOP_YARN_HOME=${HADOOP_YARN_HOME}" >> ~/.bashrc && \
-    echo "export HIVE_HOME=${HIVE_HOME}" >> ~/.bashrc && \
-    echo "export CLASSPATH=\$CLASSPATH:\$HADOOP_HOME/lib/*:\$HIVE_HOME/lib/*" >> ~/.bashrc && \
-    echo "export SPARK_HOME=${SPARK_HOME}" >> ~/.bashrc && \
-    echo "export PYSPARK_PYTHON=/usr/bin/python3" >> ~/.bashrc && \
-    echo "export PYSPARK_DRIVER_PYTHON=/usr/bin/python3" >> ~/.bashrc && \
-    echo "export PATH=\$PATH:\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin:\$HIVE_HOME/bin:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" >> ~/.bashrc && \
+# Tập trung biến môi trường vào /etc/profile.d/hadoop.sh và nạp cho cả interactive / non-interactive shell
+RUN printf '%s\n' \
+    "export JAVA_HOME=${JAVA_HOME}" \
+    "export HADOOP_HOME=${HADOOP_HOME}" \
+    "export HADOOP_CONF_DIR=${HADOOP_CONF_DIR}" \
+    "export HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME}" \
+    "export HADOOP_COMMON_HOME=${HADOOP_COMMON_HOME}" \
+    "export HADOOP_HDFS_HOME=${HADOOP_HDFS_HOME}" \
+    "export HADOOP_YARN_HOME=${HADOOP_YARN_HOME}" \
+    "export HIVE_HOME=${HIVE_HOME}" \
+    "export SPARK_HOME=${SPARK_HOME}" \
+    "export PYSPARK_PYTHON=/usr/bin/python3" \
+    "export PYSPARK_DRIVER_PYTHON=/usr/bin/python3" \
+    "export CLASSPATH=\$CLASSPATH:\$HADOOP_HOME/lib/*:\$HIVE_HOME/lib/*" \
+    "export PATH=\$PATH:\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin:\$HIVE_HOME/bin:\$SPARK_HOME/bin:\$SPARK_HOME/sbin" \
+    > /etc/profile.d/hadoop.sh && \
+    chmod +x /etc/profile.d/hadoop.sh && \
+    echo "source /etc/profile.d/hadoop.sh" >> /home/${HADOOP_USER}/.bashrc && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> ${HADOOP_CONF_DIR}/hadoop-env.sh && \
     echo "export HADOOP_HOME=${HADOOP_HOME}" >> ${HIVE_HOME}/conf/hive-env.sh
 
-    USER root
-    # Đảm bảo mọi phiên login (kể cả SSH và non-interactive) đều có biến môi trường
-    RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile.d/hadoop.sh && \
-        echo "export HADOOP_HOME=${HADOOP_HOME}" >> /etc/profile.d/hadoop.sh && \
-        echo "export HIVE_HOME=${HIVE_HOME}" >> /etc/profile.d/hadoop.sh && \
-        echo "export SPARK_HOME=${SPARK_HOME}" >> /etc/profile.d/hadoop.sh && \
-        echo "export PATH=\$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:${HIVE_HOME}/bin:${SPARK_HOME}/bin:${SPARK_HOME}/sbin" >> /etc/profile.d/hadoop.sh && \
-        chmod +x /etc/profile.d/hadoop.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-    COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-    RUN chmod +x /usr/local/bin/entrypoint.sh
-
-    ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

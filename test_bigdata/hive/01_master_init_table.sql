@@ -1,5 +1,5 @@
 -- =====================================================================
--- PHẦN CHẠY CỦA MASTER: LÊ ĐẶNG HOÀNG ANH (hoanganh24162006-master)
+-- PHẦN CHẠY CỦA MASTER: LÊ ĐẶNG HOÀNG ANH (anh24162006-master)
 -- Nhiệm vụ: Khởi tạo Database, tạo bảng ngoài sales_big và xem dữ liệu mẫu
 -- =====================================================================
 

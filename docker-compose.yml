@@ -2,13 +2,13 @@ services:
   hadoop-node:
     build: .
     image: bigdata-ecosystem:latest
-    # Đổi hostname và container_name tương ứng trên từng laptop:
-    # Máy 1: anh24162006-master | Máy 2: hoc-slave1 | Máy 3: nguyen-slave2 | Máy 4: anh24133004-slave3
-    hostname: anh24162006-master
-    container_name: anh24162006-master
+    # Cấu hình NODE_HOSTNAME và NODE_ROLE trong file .env trên từng máy:
+    # Máy 1: anh24162006-master (master) | Máy 2: hoc-slave1 (slave) | Máy 3: nguyen-slave2 (slave) | Máy 4: anh24133004-slave3 (slave)
+    hostname: ${NODE_HOSTNAME:-anh24162006-master}
+    container_name: ${NODE_HOSTNAME:-anh24162006-master}
     entrypoint: ["/bin/bash", "-c", "tr -d '\\r' < /usr/local/bin/entrypoint.sh | /bin/bash"]
     environment:
-      - NODE_ROLE=master # Đổi thành 'slave' trên 3 máy Slave
+      - NODE_ROLE=${NODE_ROLE:-master}
     extra_hosts:
       - "anh24162006-master:100.105.99.31"
       - "hoc-slave1:100.123.200.77"
