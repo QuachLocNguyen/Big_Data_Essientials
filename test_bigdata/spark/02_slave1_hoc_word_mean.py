@@ -1,33 +1,51 @@
 # =====================================================================
 # BÀI 2 (SLAVE 1): WORD MEAN BẰNG PYSPARK MAPREDUCE
 # Sinh viên thực hiện: Nguyễn Đức Học - 24162039 (hoc-slave1)
-# Mục tiêu: Tính độ dài trung bình của các từ trong văn bản (Word Mean)
+# Mục tiêu: Tính độ dài trung bình của các từ trong customer_review (Word Mean)
 # =====================================================================
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
 
-spark = SparkSession.builder \
-    .appName("02_WordMean_Slave1_Hoc") \
+spark = (
+    SparkSession.builder
+    .appName("02_WordMean_CustomerReview_Slave1_Hoc")
     .getOrCreate()
-sc = spark.sparkContext
-
-# 1. Đọc file văn bản từ HDFS
-lines = sc.textFile("hdfs://anh24162006-master:9000/test_bigdata/input/input_text_big.txt")
-
-# 2. Bước MAP: Tách từ và ánh xạ mỗi từ thành cặp (độ_dài_từ, 1)
-words = lines.flatMap(lambda line: line.split())
-length_pairs = words.map(lambda word: (len(word), 1))
-
-# 3. Bước REDUCE: Cộng tổng độ dài tất cả các từ và tổng số lượng từ
-total_length, total_words = length_pairs.reduce(
-    lambda a, b: (a[0] + b[0], a[1] + b[1])
 )
 
-word_mean = total_length / total_words
+try:
+    # Đọc CSV gốc trực tiếp từ HDFS; hàng đầu là header
+    orders = (
+        spark.read
+        .option("header", "true")
+        .option("quote", '"')
+        .option("escape", "\\")
+        .csv("hdfs://anh24162006-master:9000/ecommerce_dw/staging/raw_orders")
+    )
 
-print("===== KẾT QUẢ TÍNH WORD MEAN (ĐỘ DÀI TRUNG BÌNH CỦA TỪ) =====")
-print(f"Tổng số từ (Total Words)      : {total_words}")
-print(f"Tổng độ dài (Total Characters): {total_length}")
-print(f"Độ dài trung bình (Word Mean) : {word_mean:.4f}")
+    reviews = orders.select("customer_review").where(
+        col("customer_review").isNotNull()
+        & (col("customer_review").cast("string") != "")
+    )
 
-spark.stop()
+    # MAP: tách mỗi review thành từ, ánh xạ thành (độ dài, 1)
+    word_pairs = reviews.rdd.flatMap(
+        lambda row: (row["customer_review"] or "").split()
+    ).map(lambda word: (len(word), 1))
 
+    # REDUCE: cộng tổng độ dài và tổng số từ
+    total_chars, total_words = word_pairs.fold(
+        (0, 0),
+        lambda a, b: (a[0] + b[0], a[1] + b[1])
+    )
+
+    print("===== WORD MEAN: CUSTOMER REVIEW =====")
+    print(f"Tổng số từ: {total_words}")
+
+    if total_words:
+        print(f"Tổng số ký tự: {total_chars}")
+        print(f"Word Mean: {total_chars / total_words:.4f}")
+    else:
+        print("Không tìm thấy từ nào trong customer_review.")
+
+finally:
+    spark.stop()

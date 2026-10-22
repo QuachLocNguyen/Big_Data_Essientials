@@ -3,17 +3,21 @@
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://anh24162006-master:9000</value>
+        <description>Địa chỉ URI mặc định của hệ thống file phân tán HDFS, trỏ về NameNode tại máy Master (cổng 9000).</description>
     </property>
     <property>
         <name>io.file.buffer.size</name>
         <value>131072</value>
+        <description>Kích thước bộ đệm (buffer) đọc/ghi file của Hadoop tính bằng byte (131072 bytes = 128 KB), giúp tăng tốc độ truyền tải dữ liệu qua mạng.</description>
     </property>
     <property>
         <name>hadoop.proxyuser.hadoopanh24162006.hosts</name>
         <value>*</value>
+        <description>Cho phép user hadoopanh24162006 (chạy HiveServer2) đóng vai (proxy/impersonate) kết nối từ bất kỳ địa chỉ IP/host nào (*) khi truy cập HDFS.</description>
     </property>
     <property>
         <name>hadoop.proxyuser.hadoopanh24162006.groups</name>
         <value>*</value>
+        <description>Cho phép user hadoopanh24162006 đại diện cho mọi nhóm người dùng (*) khi thực hiện truy vấn qua HiveServer2 / Beeline / DBeaver.</description>
     </property>
 </configuration>

@@ -3,41 +3,106 @@
     <property>
         <name>hive.exec.local.scratchdir</name>
         <value>/tmp/hive/hadoopanh24162006</value>
+        <description>Thư mục tạm cục bộ trên máy chạy Hive để lưu kế hoạch thực thi (execution plan) và dữ liệu nháp trong quá trình biên dịch truy vấn.</description>
     </property>
     <property>
         <name>hive.downloaded.resources.dir</name>
         <value>/tmp/hive_io/${hive.session.id}_resources</value>
+        <description>Thư mục cục bộ dùng để lưu tạm các tài nguyên (file .jar, file phụ trợ) được tải về trong mỗi phiên làm việc (session) của Hive.</description>
     </property>
     <property>
         <name>hive.querylog.location</name>
         <value>/tmp/hive/hadoopanh24162006</value>
+        <description>Thư mục lưu trữ các file nhật ký (log) thực thi câu lệnh truy vấn của Hive.</description>
     </property>
     <property>
         <name>hive.server2.logging.operation.log.location</name>
         <value>/tmp/hive/hadoopanh24162006/operation_logs</value>
+        <description>Thư mục lưu log chi tiết của từng thao tác truy vấn trên HiveServer2 để hiển thị lại tiến trình cho các client như Beeline hoặc DBeaver.</description>
     </property>
     <property>
         <name>hive.metastore.warehouse.dir</name>
         <value>/user/hive/warehouse</value>
+        <description>Thư mục gốc mặc định trên HDFS dùng để lưu dữ liệu của các bảng nội bộ (Managed Tables) trong Hive Data Warehouse.</description>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
         <value>jdbc:derby:;databaseName=/home/hadoopanh24162006/hive/metastore_db;create=true</value>
+        <description>Chuỗi kết nối JDBC tới cơ sở dữ liệu Derby Embedded lưu trữ toàn bộ thông tin cấu trúc bảng (Metastore) của Hive.</description>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
         <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+        <description>Tên lớp Driver JDBC của cơ sở dữ liệu nhúng Apache Derby dùng cho Hive Metastore.</description>
     </property>
     <property>
         <name>hive.execution.engine</name>
         <value>mr</value>
+        <description>Đặt công cụ thực thi mặc định của Hive là MapReduce (mr) thay vì Apache Tez để các truy vấn chạy thành các job MapReduce trên YARN.</description>
     </property>
     <property>
         <name>hive.server2.thrift.bind.host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép HiveServer2 lắng nghe kết nối trên mọi địa chỉ mạng (0.0.0.0) để DBeaver từ máy Windows và các máy khác kết nối vào được.</description>
     </property>
     <property>
         <name>hive.server2.thrift.port</name>
         <value>10000</value>
+        <description>Cổng giao thức Thrift JDBC mặc định (10000) của HiveServer2 phục vụ kết nối từ DBeaver và Beeline.</description>
+    </property>
+    <property>
+        <name>hive.fetch.task.conversion</name>
+        <value>more</value>
+        <description>Cho phép Hive trả kết quả trực tiếp (Fetch Task) đối với các câu lệnh metadata và các truy vấn đơn giản trên bảng nhỏ dưới ngưỡng threshold mà không cần tạo job MapReduce.</description>
+    </property>
+    <property>
+        <name>hive.fetch.task.conversion.threshold</name>
+        <value>10485760</value>
+        <description>Ngưỡng kích thước dữ liệu tối đa (10485760 bytes = 10 MB) áp dụng Fetch Task: bảng dưới 10 MB trả về ngay lập tức; bảng trên 10 MB (như staging_orders 46.5 MB) tự động đẩy xuống chạy MapReduce trên YARN để bảo vệ 256 MB RAM của HiveServer2.</description>
+    </property>
+    <property>
+        <name>mapreduce.client.submit.file.replication</name>
+        <value>1</value>
+        <description>Giảm số bản sao của file job.jar (92.7 MB) khi submit job MapReduce từ 10 xuống 1 để tránh nghẽn băng thông mạng VPN Tailscale giữa các node.</description>
+    </property>
+    <property>
+        <name>hive.aux.jars.path</name>
+        <value>file:///home/hadoopanh24162006/hive/lib/opencsv-5.9.jar</value>
+        <description>Tự động gửi thư viện opencsv-5.9.jar qua YARN DistributedCache xuống các node Slave để xử lý bảng staging_orders (OpenCSVSerde) mà không bị lỗi NoClassDefFoundError.</description>
+    </property>
+    <property>
+        <name>hive.exec.parallel</name>
+        <value>true</value>
+        <description>Bật chế độ thực thi song song (in parallel) các Stage độc lập trong cùng một câu truy vấn thay vì chạy tuần tự (in serial mode).</description>
+    </property>
+    <property>
+        <name>hive.exec.parallel.thread.number</name>
+        <value>8</value>
+        <description>Số lượng luồng (threads) tối đa được phép chạy song song cùng lúc khi hive.exec.parallel = true.</description>
+    </property>
+    <property>
+        <name>mapreduce.input.fileinputformat.split.maxsize</name>
+        <value>16777216</value>
+        <description>Giới hạn kích thước mỗi Input Split là 16 MB (thay vì 256 MB mặc định) để chia file 46.5 MB thành 3 Mappers chạy song song trên các máy Slave thay vì chỉ 1 Mapper.</description>
+    </property>
+    <property>
+        <name>hive.exec.reducers.bytes.per.reducer</name>
+        <value>16777216</value>
+        <description>Mỗi Reducer xử lý trung bình 16 MB dữ liệu (thay vì 256 MB mặc định), giúp Hive tự động sinh nhiều Reducers chạy song song khi GROUP BY / JOIN / ORDER BY.</description>
+    </property>
+    <property>
+        <name>hive.vectorized.execution.enabled</name>
+        <value>true</value>
+        <description>Bật chế độ Vectorized Execution ở pha Map: xử lý dữ liệu theo từng lô 1024 dòng cùng lúc thay vì từng dòng một, giúp tăng tốc CPU.</description>
+    </property>
+    <property>
+        <name>hive.vectorized.execution.reduce.enabled</name>
+        <value>true</value>
+        <description>Bật chế độ Vectorized Execution ở pha Reduce để tăng tốc quá trình gom nhóm và tính toán.</description>
+    </property>
+    <property>
+        <name>hive.auto.convert.join</name>
+        <value>true</value>
+        <description>Tự động chuyển phép JOIN giữa bảng lớn và bảng nhỏ (như customers, products) thành MapJoin (Broadcast Join) ngay trong pha Map, bỏ qua pha Reduce.</description>
     </property>
 </configuration>

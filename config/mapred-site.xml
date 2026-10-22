@@ -3,45 +3,61 @@
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
+        <description>Chỉ định chạy các tác vụ MapReduce phân tán trên hệ thống quản lý tài nguyên YARN (thay vì chạy cục bộ local).</description>
     </property>
     <property>
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=/home/hadoopanh24162006/hadoop</value>
+        <description>Đường dẫn biến môi trường HADOOP_MAPRED_HOME cho tiến trình điều phối ApplicationMaster (AM) trên YARN.</description>
     </property>
     <property>
         <name>mapreduce.map.env</name>
         <value>HADOOP_MAPRED_HOME=/home/hadoopanh24162006/hadoop</value>
+        <description>Đường dẫn biến môi trường HADOOP_MAPRED_HOME cho các container thực thi pha Map trên các máy Slave.</description>
     </property>
     <property>
         <name>mapreduce.reduce.env</name>
         <value>HADOOP_MAPRED_HOME=/home/hadoopanh24162006/hadoop</value>
+        <description>Đường dẫn biến môi trường HADOOP_MAPRED_HOME cho các container thực thi pha Reduce trên các máy Slave.</description>
     </property>
     <property>
         <name>mapreduce.application.classpath</name>
         <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+        <description>Danh sách đường dẫn nạp thư viện Java (.jar) của Hadoop MapReduce cho các container khi chạy tác vụ trên YARN.</description>
     </property>
     <property>
         <name>mapreduce.jobhistory.bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép dịch vụ lưu lịch sử job (JobHistoryServer) lắng nghe kết nối trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
         <name>mapreduce.jobhistory.address</name>
         <value>anh24162006-master:10020</value>
+        <description>Địa chỉ RPC của JobHistoryServer tại máy Master (cổng 10020) để các container báo cáo trạng thái sau khi chạy xong.</description>
     </property>
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>0.0.0.0:19888</value>
+        <description>Địa chỉ giao diện Web UI của JobHistoryServer (cổng 19888) để xem lại log và thống kê các job MapReduce đã hoàn thành.</description>
     </property>
     <property>
         <name>mapreduce.shuffle.port</name>
         <value>4040</value>
+        <description>Cổng mạng (4040) dùng cho giai đoạn Shuffle (truyền kết quả trung gian từ các Mapper sang các Reducer).</description>
     </property>
     <property>
         <name>mapreduce.job.ubertask.enable</name>
         <value>true</value>
+        <description>Bật chế độ UberTask: cho phép gộp các tác vụ MapReduce nhỏ chạy ngay bên trong container của ApplicationMaster để tiết kiệm thời gian cấp phát container mới.</description>
     </property>
     <property>
         <name>yarn.app.mapreduce.am.job.client.port-range</name>
         <value>8031-8032</value>
+        <description>Giới hạn dải cổng kết nối của ApplicationMaster trong khoảng 8031-8032 để dễ dàng mở cổng qua Docker và Firewall.</description>
+    </property>
+    <property>
+        <name>mapreduce.client.submit.file.replication</name>
+        <value>1</value>
+        <description>Giảm số bản sao của file thực thi tạm thời (job.jar) khi gửi job lên HDFS từ 10 xuống 1 để tăng tốc độ khởi tạo job qua mạng VPN.</description>
     </property>
 </configuration>

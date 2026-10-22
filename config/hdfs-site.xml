@@ -2,42 +2,62 @@
 <configuration>
     <property>
         <name>dfs.replication</name>
-        <value>3</value>
+        <value>2</value>
+        <description>Hệ số nhân bản (replication factor) mặc định của mỗi block dữ liệu trên HDFS (lưu trên 2 DataNode để đảm bảo an toàn khi có 1 máy Slave tắt).</description>
+    </property>
+    <property>
+        <name>dfs.client.block.write.replace-datanode-on-failure.policy</name>
+        <value>NEVER</value>
+        <description>Chính sách xử lý khi 1 DataNode trong đường ống (pipeline) ghi bị lỗi hoặc đang tắt: NEVER nghĩa là không đòi tìm DataNode mới thay thế mà tiếp tục ghi lên các DataNode còn sống.</description>
+    </property>
+    <property>
+        <name>dfs.client.block.write.replace-datanode-on-failure.enable</name>
+        <value>false</value>
+        <description>Tắt tính năng bắt buộc thay thế DataNode khi ghi block, giúp cụm nhỏ (2-3 Slave) không bị văng lỗi khi ghi file hoặc chạy Hive trong lúc 1 máy thành viên đang tắt.</description>
     </property>
     <property>
         <name>dfs.namenode.name.dir</name>
         <value>/home/hadoopanh24162006/hadoop/hdfs/namenode</value>
+        <description>Thư mục trên ổ cứng cục bộ của máy Master dùng để lưu trữ bảng phân vùng và metadata của HDFS (FsImage và EditLogs).</description>
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
         <value>/home/hadoopanh24162006/hadoop/hdfs/datanode</value>
+        <description>Thư mục trên ổ cứng cục bộ của các máy Slave (DataNode) dùng để lưu trữ các block dữ liệu thực tế.</description>
     </property>
     <property>
         <name>dfs.blocksize</name>
         <value>268435456</value>
+        <description>Kích thước tối đa của mỗi block trên HDFS tính bằng byte (268435456 bytes = 256 MB).</description>
     </property>
     <property>
         <name>dfs.namenode.rpc-bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép NameNode lắng nghe kết nối RPC từ mọi giao diện mạng (0.0.0.0), bao gồm mạng Docker và VPN Tailscale.</description>
     </property>
     <property>
         <name>dfs.namenode.servicerpc-bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép NameNode lắng nghe các yêu cầu dịch vụ từ DataNode trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
         <name>dfs.namenode.http-bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép giao diện Web UI của NameNode (cổng 9870) lắng nghe trên mọi địa chỉ IP (0.0.0.0) để truy cập được từ trình duyệt ngoài máy host.</description>
     </property>
     <property>
         <name>dfs.client.use.datanode.hostname</name>
         <value>true</value>
+        <description>Bắt buộc HDFS Client sử dụng hostname (đã ánh xạ IP Tailscale trong /etc/hosts) thay vì IP nội bộ Docker khi giao tiếp với các DataNode.</description>
     </property>
     <property>
         <name>dfs.datanode.use.datanode.hostname</name>
         <value>true</value>
+        <description>Bắt buộc các DataNode sử dụng hostname khi truyền dữ liệu chéo cho nhau qua mạng VPN Tailscale.</description>
     </property>
     <property>
         <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
         <value>false</value>
+        <description>Tắt kiểm tra đối chiếu ngược DNS/IP khi DataNode đăng ký vào NameNode, giúp các container khác mạng LAN kết nối qua Tailscale không bị từ chối.</description>
     </property>
 </configuration>

@@ -3,57 +3,71 @@
     <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>anh24162006-master</value>
+        <description>Tên máy chủ (hostname) chạy dịch vụ điều phối tài nguyên trung tâm ResourceManager (nằm tại máy Master).</description>
     </property>
     <property>
         <name>yarn.resourcemanager.bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép ResourceManager lắng nghe kết nối từ các NodeManager (máy Slave) và Client trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
         <name>yarn.nodemanager.bind-host</name>
         <value>0.0.0.0</value>
+        <description>Cho phép NodeManager trên mỗi máy Slave lắng nghe kết nối trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
         <name>yarn.nodemanager.address</name>
         <value>0.0.0.0:8033</value>
+        <description>Cổng cố định (8033) của NodeManager để quản lý việc khởi chạy container giữa các máy qua Docker và Tailscale.</description>
     </property>
     <property>
         <name>yarn.nodemanager.localizer.address</name>
         <value>0.0.0.0:8030</value>
+        <description>Cổng dịch vụ Localizer (8030) trên NodeManager dùng để tải các file tài nguyên tạm thời (như job.jar, opencsv.jar) về máy Slave trước khi chạy container.</description>
     </property>
     <property>
         <name>yarn.nodemanager.webapp.address</name>
         <value>0.0.0.0:8042</value>
+        <description>Địa chỉ giao diện Web UI của từng NodeManager (cổng 8042) để xem trạng thái và log của các container chạy trên máy Slave đó.</description>
     </property>
     <property>
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
+        <description>Khai báo dịch vụ phụ trợ mapreduce_shuffle trên NodeManager để phục vụ việc truyền dữ liệu từ pha Map sang pha Reduce.</description>
     </property>
     <property>
         <name>yarn.nodemanager.auxservices.mapreduce.shuffle.class</name>
         <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        <description>Lớp Java xử lý dịch vụ Shuffle của MapReduce trên mỗi NodeManager.</description>
     </property>
     <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
         <value>4096</value>
+        <description>Tổng dung lượng RAM tối đa (4096 MB = 4 GB) mà mỗi máy Slave (NodeManager) được phép cấp phát cho các container YARN.</description>
     </property>
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
         <value>512</value>
+        <description>Mức dung lượng RAM tối thiểu (512 MB) cấp cho mỗi một container trên YARN.</description>
     </property>
     <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
         <value>4096</value>
+        <description>Mức dung lượng RAM tối đa (4096 MB = 4 GB) mà một container đơn lẻ có thể yêu cầu từ YARN.</description>
     </property>
     <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
+        <description>Tắt kiểm tra giới hạn bộ nhớ ảo (Virtual Memory) để tránh việc Java 17 trên Linux/WSL cấp phát bộ nhớ ảo lớn làm YARN giết nhầm container.</description>
     </property>
     <property>
         <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
         <value>99.0</value>
+        <description>Cho phép NodeManager tiếp tục hoạt động ngay cả khi ổ cứng máy tính đã đầy tới 99% (tránh lỗi UNHEALTHY node khi ổ đĩa gần đầy).</description>
     </property>
     <property>
         <name>yarn.nodemanager.env-whitelist</name>
         <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_HOME,PATH,LANG,TZ,HADOOP_MAPRED_HOME</value>
+        <description>Danh sách các biến môi trường hệ thống được phép truyền vào bên trong các container khi chạy tác vụ trên YARN.</description>
     </property>
 </configuration>
