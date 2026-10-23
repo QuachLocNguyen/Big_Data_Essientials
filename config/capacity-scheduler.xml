@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- Khai báo queue con của root là default -->
+    <property>
+        <name>yarn.scheduler.capacity.root.queues</name>
+        <value>default</value>
+        <description>Danh sách các hàng đợi con của queue root.</description>
+    </property>
+    <!-- Dung lượng phân bổ cho queue default là 100% -->
+    <property>
+        <name>yarn.scheduler.capacity.root.default.capacity</name>
+        <value>100</value>
+        <description>Tỷ lệ tài nguyên cụm cấp cho hàng đợi mặc định (100%).</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.user-limit-factor</name>
+        <value>1</value>
+        <description>Hệ số giới hạn tài nguyên cho mỗi người dùng.</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.maximum-capacity</name>
+        <value>100</value>
+        <description>Mức trần dung lượng tối đa mà queue default có thể đạt tới.</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.state</name>
+        <value>RUNNING</value>
+        <description>Trạng thái hoạt động của hàng đợi default.</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.acl_submit_applications</name>
+        <value>*</value>
+        <description>Cho phép tất cả người dùng submit job vào queue default.</description>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.root.default.acl_administer_queue</name>
+        <value>*</value>
+        <description>Cho phép tất cả người dùng quản trị queue default.</description>
+    </property>
+
+    <!-- Cấu hình AM Resource Percent (giữ nguyên tinh chỉnh của nhóm) -->
     <property>
         <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
         <value>0.5</value>
-        <description>Tỷ lệ tài nguyên RAM tối đa trong toàn cụm YARN được phép cấp cho các tiến trình điều phối ApplicationMaster (mặc định 0.1 - 0.2, nâng lên 0.5 tức 50% để cụm nhỏ 8 GB RAM có thể chạy song song nhiều AM mà không bị nghẽn queue).</description>
+        <description>Tỷ lệ tài nguyên RAM tối đa trong toàn cụm YARN được phép cấp cho các tiến trình điều phối ApplicationMaster (50%).</description>
     </property>
+
     <property>
         <name>yarn.scheduler.capacity.root.default.maximum-am-resource-percent</name>
         <value>0.5</value>
-        <description>Tỷ lệ tài nguyên RAM tối đa cấp cho ApplicationMaster trong hàng đợi mặc định (root.default). Với tổng 8 GB RAM cụm, mức 50% cho phép AM sử dụng tới 4096 MB, đủ chỗ cho 4 AM chạy đồng thời.</description>
+        <description>Tỷ lệ tài nguyên RAM tối đa cấp cho ApplicationMaster trong hàng đợi default (50%).</description>
     </property>
 </configuration>
-
