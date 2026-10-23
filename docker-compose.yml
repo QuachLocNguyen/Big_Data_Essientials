@@ -1,38 +1,38 @@
 services:
+  tailscale:
+    image: tailscale/tailscale:stable
+    container_name: ts-${NODE_HOSTNAME:-anh24162006-master}
+    hostname: ${NODE_HOSTNAME:-anh24162006-master}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_HOSTNAME=${NODE_HOSTNAME:-anh24162006-master}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_TAILSCALED_EXTRA_ARGS=--port=41642
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    privileged: true
+    ports:
+      # Chỉ mở duy nhất cổng UDP 41642 để tối ưu kết nối P2P Direct giữa các máy
+      - "41642:41642/udp"
+    volumes:
+      - ts_state:/var/lib/tailscale
+    restart: unless-stopped
+
   hadoop-node:
     build: .
     image: bigdata-ecosystem:latest
-    # Cấu hình NODE_HOSTNAME và NODE_ROLE trong file .env trên từng máy:
-    # Máy 1: anh24162006-master (master) | Máy 2: hoc-slave1 (slave) | Máy 3: nguyen-slave2 (slave) | Máy 4: anh24133004-slave3 (slave)
-    hostname: ${NODE_HOSTNAME:-anh24162006-master}
     container_name: ${NODE_HOSTNAME:-anh24162006-master}
+    network_mode: "service:tailscale"
+    depends_on:
+      - tailscale
     entrypoint: ["/bin/bash", "-c", "tr -d '\\r' < /usr/local/bin/entrypoint.sh | /bin/bash"]
     environment:
       - NODE_ROLE=${NODE_ROLE:-master}
-    extra_hosts:
-      - "anh24162006-master:100.105.99.31"
-      - "hoc-slave1:100.123.200.77"
-      - "nguyen-slave2:100.106.204.115"
-      - "anh24133004-slave3:100.112.244.83"
-    ports:
-      - "2222:2222"     # SSH giữa các node (dùng port 2222 để an toàn, tránh trùng port 22 của máy thật)
-      - "9000:9000"     # HDFS NameNode RPC
-      - "9870:9870"     # HDFS NameNode Web UI
-      - "9864:9864"     # HDFS DataNode Web UI
-      - "9866:9866"     # HDFS DataNode Data Transfer
-      - "9867:9867"     # HDFS DataNode IPC
-      - "8030:8030"     # YARN ResourceManager Scheduler
-      - "8031:8031"     # YARN ResourceManager Tracker
-      - "8032:8032"     # YARN ResourceManager Address
-      - "8033:8033"     # YARN ResourceManager Admin
-      - "8088:8088"     # YARN ResourceManager Web UI
-      - "8042:8042"     # YARN NodeManager Web UI
-      - "10020:10020"   # MapReduce JobHistory RPC
-      - "19888:19888"   # MapReduce JobHistory Web UI
-      - "10000:10000"   # HiveServer2
-      - "7077:7077"     # Spark Standalone Master
-      - "8080:8080"     # Spark Master Web UI
-      - "4040:4040"     # Spark Application UI
     volumes:
       - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
       - ./config/core-site.xml:/home/hadoopanh24162006/hadoop/etc/hadoop/core-site.xml
@@ -49,3 +49,4 @@ services:
 
 volumes:
   hadoop_data:
+  ts_state:

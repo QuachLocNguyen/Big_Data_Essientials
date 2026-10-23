@@ -32,7 +32,7 @@
     </property>
     <property>
         <name>mapreduce.jobhistory.address</name>
-        <value>100.105.99.31:10020</value>
+        <value>anh24162006-master:10020</value>
         <description>Địa chỉ RPC của JobHistoryServer tại máy Master qua Tailscale (cổng 10020) để các container báo cáo trạng thái sau khi chạy xong.</description>
     </property>
     <property>
@@ -42,18 +42,8 @@
     </property>
     <property>
         <name>mapreduce.shuffle.port</name>
-        <value>4040</value>
-        <description>Cổng mạng (4040) dùng cho giai đoạn Shuffle (truyền kết quả trung gian từ các Mapper sang các Reducer).</description>
-    </property>
-    <property>
-        <name>yarn.app.mapreduce.am.job.task.listener.port</name>
-        <value>8035</value>
-        <description>Cố định cổng Task Listener của ApplicationMaster là 8035 để tránh mở cổng ngẫu nhiên bị Firewall / Docker chặn.</description>
-    </property>
-    <property>
-        <name>yarn.app.mapreduce.am.job.client.port-range</name>
-        <value>8035</value>
-        <description>Cố định cổng Client RPC của ApplicationMaster là 8035.</description>
+        <value>13562</value>
+        <description>Cổng mạng chuẩn (13562) dùng cho giai đoạn Shuffle (truyền kết quả trung gian từ các Mapper sang các Reducer), tránh trùng lặp với cổng 4040 của Spark Application UI.</description>
     </property>
     <property>
         <name>mapreduce.client.submit.file.replication</name>

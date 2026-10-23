@@ -3,32 +3,32 @@
     <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>anh24162006-master</value>
-        <description>IP Tailscale của máy chủ chạy dịch vụ điều phối tài nguyên trung tâm ResourceManager (nằm tại máy Master).</description>
+        <description>Hostname của máy chủ chạy dịch vụ ResourceManager (nằm tại máy Master).</description>
     </property>
     <property>
         <name>yarn.resourcemanager.address</name>
-        <value>100.105.99.31:8032</value>
-        <description>Địa chỉ RPC mà client và task YARN dùng để gọi ResourceManager qua Tailscale; khai báo IP trực tiếp để tránh phân giải nhầm sang IP Docker nội bộ.</description>
+        <value>anh24162006-master:8032</value>
+        <description>Địa chỉ RPC mà client và task YARN dùng để gọi ResourceManager.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>100.105.99.31:8030</value>
-        <description>Địa chỉ RPC Scheduler để ApplicationMaster xin cấp phát tài nguyên container qua Tailscale.</description>
+        <value>anh24162006-master:8030</value>
+        <description>Địa chỉ RPC Scheduler để ApplicationMaster xin cấp phát tài nguyên container.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>100.105.99.31:8031</value>
-        <description>Địa chỉ ResourceTracker để các NodeManager (máy Slave) đăng ký và gửi nhịp tim về Master qua Tailscale.</description>
+        <value>anh24162006-master:8031</value>
+        <description>Địa chỉ ResourceTracker để các NodeManager (máy Slave) đăng ký và gửi nhịp tim về Master.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.admin.address</name>
-        <value>100.105.99.31:8033</value>
-        <description>Cổng quản trị admin của ResourceManager qua Tailscale.</description>
+        <value>anh24162006-master:8033</value>
+        <description>Cổng quản trị admin của ResourceManager.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.bind-host</name>
         <value>0.0.0.0</value>
-        <description>Cho phép ResourceManager lắng nghe kết nối từ các NodeManager (máy Slave) và Client trên mọi giao diện mạng (0.0.0.0).</description>
+        <description>Cho phép ResourceManager lắng nghe kết nối từ các NodeManager và Client trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
         <name>yarn.nodemanager.bind-host</name>
@@ -36,24 +36,19 @@
         <description>Cho phép NodeManager trên mỗi máy Slave lắng nghe kết nối trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
-        <name>yarn.nodemanager.hostname</name>
-        <value>${env.NODE_HOSTNAME}</value>
-        <description>Hostname mà NodeManager và container quảng bá với nhau để luôn dùng tên phân giải được qua Tailscale thay vì IP nội bộ Docker 172.x.</description>
-    </property>
-    <property>
         <name>yarn.nodemanager.address</name>
-        <value>0.0.0.0:8033</value>
-        <description>Cổng cố định (8033) của NodeManager để quản lý việc khởi chạy container giữa các máy qua Docker và Tailscale.</description>
+        <value>0.0.0.0:8041</value>
+        <description>Cổng NodeManager chuẩn (8041), tách biệt hoàn toàn khỏi cổng 8033 của Master.</description>
     </property>
     <property>
         <name>yarn.nodemanager.localizer.address</name>
-        <value>0.0.0.0:8030</value>
-        <description>Cổng dịch vụ Localizer (8030) trên NodeManager dùng để tải các file tài nguyên tạm thời (như job.jar, opencsv.jar) về máy Slave trước khi chạy container.</description>
+        <value>0.0.0.0:8040</value>
+        <description>Cổng dịch vụ Localizer chuẩn (8040), tách biệt hoàn toàn khỏi cổng 8030 của Master.</description>
     </property>
     <property>
         <name>yarn.nodemanager.webapp.address</name>
         <value>0.0.0.0:8042</value>
-        <description>Địa chỉ giao diện Web UI của từng NodeManager (cổng 8042) để xem trạng thái và log của các container chạy trên máy Slave đó.</description>
+        <description>Địa chỉ giao diện Web UI của từng NodeManager (cổng 8042).</description>
     </property>
     <property>
         <name>yarn.nodemanager.aux-services</name>
@@ -73,7 +68,7 @@
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
         <value>512</value>
-        <description>Mức dung lượng RAM tối thiểu (512 MB) cấp cho mỗi một container trên YARN.</description>
+        <description>Mức dung lượng RAM tối thiểu (512 MB) cấp cho mỗi container trên YARN.</description>
     </property>
     <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
@@ -83,12 +78,12 @@
     <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
-        <description>Tắt kiểm tra giới hạn bộ nhớ ảo (Virtual Memory) để tránh việc Java 17 trên Linux/WSL cấp phát bộ nhớ ảo lớn làm YARN giết nhầm container.</description>
+        <description>Tắt kiểm tra giới hạn bộ nhớ ảo (Virtual Memory) để tránh việc Java 17 cấp phát bộ nhớ ảo lớn làm YARN giết nhầm container.</description>
     </property>
     <property>
         <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
         <value>99.0</value>
-        <description>Cho phép NodeManager tiếp tục hoạt động ngay cả khi ổ cứng máy tính đã đầy tới 99% (tránh lỗi UNHEALTHY node khi ổ đĩa gần đầy).</description>
+        <description>Cho phép NodeManager tiếp tục hoạt động ngay cả khi ổ cứng máy tính đã đầy tới 99%.</description>
     </property>
     <property>
         <name>yarn.nodemanager.env-whitelist</name>
@@ -98,21 +93,13 @@
     <property>
         <name>yarn.nm.liveness-monitor.expiry-interval-ms</name>
         <value>60000</value>
-        <description>Thời gian tối đa (60.000 ms = 60 giây thay vì mặc định 10 phút) ResourceManager chờ nhịp tim từ NodeManager trước khi đánh dấu máy Slave đó là LOST, giúp giải phóng và điều phối lại tài nguyên ngay lập tức.</description>
+        <description>Thời gian tối đa (60.000 ms = 60 giây) ResourceManager chờ nhịp tim từ NodeManager trước khi đánh dấu máy Slave đó là LOST.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.node-blacklisting.enabled</name>
         <value>true</value>
-        <description>Bật tính năng tự động đưa node chập chờn vào danh sách đen (Blacklist). Khi một máy Slave làm hỏng task liên tiếp, YARN sẽ tạm thời không giao container cho node đó nữa.</description>
+        <description>Bật tính năng tự động đưa node chập chờn vào danh sách đen (Blacklist).</description>
     </property>
-    <!-- Cấu hình cố định cổng giao tiếp cho ApplicationMaster để không bị ngẫu nhiên -->
-    <property>
-        <name>yarn.app.mapreduce.am.job.task.listener.port</name>
-        <value>8035</value>
-        <description>Cố định cổng giao tiếp giữa Task container và ApplicationMaster.</description>
-    </property>
-
-    <!-- Ép ApplicationMaster ưu tiên chạy trên node khởi tạo (Master) để tận dụng mạng ổn định -->
     <property>
         <name>yarn.resourcemanager.am.max-attempts</name>
         <value>3</value>

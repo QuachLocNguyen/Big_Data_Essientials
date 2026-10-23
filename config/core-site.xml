@@ -2,7 +2,7 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://100.105.99.31:9000</value>
+        <value>hdfs://anh24162006-master:9000</value>
         <description>Địa chỉ URI mặc định của hệ thống file phân tán HDFS, trỏ thẳng về IP Tailscale của máy Master (cổng 9000) để tránh phân giải nhầm IP Docker.</description>
     </property>
     <property>
