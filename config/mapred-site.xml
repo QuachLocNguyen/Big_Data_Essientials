@@ -46,14 +46,14 @@
         <description>Cổng mạng (4040) dùng cho giai đoạn Shuffle (truyền kết quả trung gian từ các Mapper sang các Reducer).</description>
     </property>
     <property>
-        <name>mapreduce.job.ubertask.enable</name>
-        <value>false</value>
-        <description>Tắt chế độ UberTask để các tác vụ MapReduce luôn chạy trong JVM container riêng (YarnChild) có đầy đủ thư viện của Hive (tránh lỗi NoClassDefFoundError: org/apache/commons/collections/CollectionUtils trong uber-SubtaskRunner).</description>
+        <name>yarn.app.mapreduce.am.job.task.listener.port</name>
+        <value>8035</value>
+        <description>Cố định cổng Task Listener của ApplicationMaster là 8035 để tránh mở cổng ngẫu nhiên bị Firewall / Docker chặn.</description>
     </property>
     <property>
         <name>yarn.app.mapreduce.am.job.client.port-range</name>
-        <value>50000-50100</value>
-        <description>Dải cổng kết nối của ApplicationMaster đổi sang dải cao (50000-50100) để hoàn toàn không bị trùng lặp với các cổng cốt lõi của ResourceManager (8030-8033).</description>
+        <value>8035</value>
+        <description>Cố định cổng Client RPC của ApplicationMaster là 8035.</description>
     </property>
     <property>
         <name>mapreduce.client.submit.file.replication</name>

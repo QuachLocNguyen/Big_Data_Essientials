@@ -102,7 +102,7 @@
     </property>
     <property>
         <name>hive.auto.convert.join</name>
-        <value>true</value>
-        <description>Tự động chuyển phép JOIN giữa bảng lớn và bảng nhỏ (như customers, products) thành MapJoin (Broadcast Join) ngay trong pha Map, bỏ qua pha Reduce.</description>
+        <value>false</value>
+        <description>Tắt tự động chuyển đổi MapJoin cục bộ (MapredLocalTask) để tránh lỗi exit code 1 trên Master, đảm bảo các phép JOIN được phân tán trực tiếp qua YARN MapReduce.</description>
     </property>
 </configuration>

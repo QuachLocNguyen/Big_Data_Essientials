@@ -105,9 +105,17 @@
         <value>true</value>
         <description>Bật tính năng tự động đưa node chập chờn vào danh sách đen (Blacklist). Khi một máy Slave làm hỏng task liên tiếp, YARN sẽ tạm thời không giao container cho node đó nữa.</description>
     </property>
+    <!-- Cấu hình cố định cổng giao tiếp cho ApplicationMaster để không bị ngẫu nhiên -->
+    <property>
+        <name>yarn.app.mapreduce.am.job.task.listener.port</name>
+        <value>8035</value>
+        <description>Cố định cổng giao tiếp giữa Task container và ApplicationMaster.</description>
+    </property>
+
+    <!-- Ép ApplicationMaster ưu tiên chạy trên node khởi tạo (Master) để tận dụng mạng ổn định -->
     <property>
         <name>yarn.resourcemanager.am.max-attempts</name>
         <value>3</value>
-        <description>Số lần thử lại tối đa cho tiến trình điều phối ApplicationMaster (AM) của ứng dụng. Nếu AM container trên một máy Slave bị kẹt hoặc sập nguồn, ResourceManager sẽ tự động khởi chạy lại trên một máy Slave khác.</description>
+        <description>Số lần thử lại tối đa cho tiến trình điều phối ApplicationMaster (AM) của ứng dụng.</description>
     </property>
 </configuration>
