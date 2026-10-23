@@ -52,8 +52,8 @@
     </property>
     <property>
         <name>yarn.app.mapreduce.am.job.client.port-range</name>
-        <value>8031-8032</value>
-        <description>Giới hạn dải cổng kết nối của ApplicationMaster trong khoảng 8031-8032 để dễ dàng mở cổng qua Docker và Firewall.</description>
+        <value>50000-50100</value>
+        <description>Dải cổng kết nối của ApplicationMaster đổi sang dải cao (50000-50100) để hoàn toàn không bị trùng lặp với các cổng cốt lõi của ResourceManager (8030-8033).</description>
     </property>
     <property>
         <name>mapreduce.client.submit.file.replication</name>

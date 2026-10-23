@@ -36,6 +36,11 @@
         <description>Cho phép NodeManager trên mỗi máy Slave lắng nghe kết nối trên mọi giao diện mạng (0.0.0.0).</description>
     </property>
     <property>
+        <name>yarn.nodemanager.hostname</name>
+        <value>${env.NODE_HOSTNAME}</value>
+        <description>Hostname mà NodeManager và container quảng bá với nhau để luôn dùng tên phân giải được qua Tailscale thay vì IP nội bộ Docker 172.x.</description>
+    </property>
+    <property>
         <name>yarn.nodemanager.address</name>
         <value>0.0.0.0:8033</value>
         <description>Cổng cố định (8033) của NodeManager để quản lý việc khởi chạy container giữa các máy qua Docker và Tailscale.</description>
