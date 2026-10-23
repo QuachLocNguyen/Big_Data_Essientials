@@ -2,8 +2,28 @@
 <configuration>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>anh24162006-master</value>
-        <description>Tên máy chủ (hostname) chạy dịch vụ điều phối tài nguyên trung tâm ResourceManager (nằm tại máy Master).</description>
+        <value>100.105.99.31</value>
+        <description>IP Tailscale của máy chủ chạy dịch vụ điều phối tài nguyên trung tâm ResourceManager (nằm tại máy Master).</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>100.105.99.31:8032</value>
+        <description>Địa chỉ RPC mà client và task YARN dùng để gọi ResourceManager qua Tailscale; khai báo IP trực tiếp để tránh phân giải nhầm sang IP Docker nội bộ.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.scheduler.address</name>
+        <value>100.105.99.31:8030</value>
+        <description>Địa chỉ RPC Scheduler để ApplicationMaster xin cấp phát tài nguyên container qua Tailscale.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>100.105.99.31:8031</value>
+        <description>Địa chỉ ResourceTracker để các NodeManager (máy Slave) đăng ký và gửi nhịp tim về Master qua Tailscale.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.admin.address</name>
+        <value>100.105.99.31:8033</value>
+        <description>Cổng quản trị admin của ResourceManager qua Tailscale.</description>
     </property>
     <property>
         <name>yarn.resourcemanager.bind-host</name>
@@ -69,5 +89,20 @@
         <name>yarn.nodemanager.env-whitelist</name>
         <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_HOME,PATH,LANG,TZ,HADOOP_MAPRED_HOME</value>
         <description>Danh sách các biến môi trường hệ thống được phép truyền vào bên trong các container khi chạy tác vụ trên YARN.</description>
+    </property>
+    <property>
+        <name>yarn.nm.liveness-monitor.expiry-interval-ms</name>
+        <value>60000</value>
+        <description>Thời gian tối đa (60.000 ms = 60 giây thay vì mặc định 10 phút) ResourceManager chờ nhịp tim từ NodeManager trước khi đánh dấu máy Slave đó là LOST, giúp giải phóng và điều phối lại tài nguyên ngay lập tức.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.node-blacklisting.enabled</name>
+        <value>true</value>
+        <description>Bật tính năng tự động đưa node chập chờn vào danh sách đen (Blacklist). Khi một máy Slave làm hỏng task liên tiếp, YARN sẽ tạm thời không giao container cho node đó nữa.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.am.max-attempts</name>
+        <value>3</value>
+        <description>Số lần thử lại tối đa cho tiến trình điều phối ApplicationMaster (AM) của ứng dụng. Nếu AM container trên một máy Slave bị kẹt hoặc sập nguồn, ResourceManager sẽ tự động khởi chạy lại trên một máy Slave khác.</description>
     </property>
 </configuration>

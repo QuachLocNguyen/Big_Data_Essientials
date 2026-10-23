@@ -60,4 +60,14 @@
         <value>false</value>
         <description>Tắt kiểm tra đối chiếu ngược DNS/IP khi DataNode đăng ký vào NameNode, giúp các container khác mạng LAN kết nối qua Tailscale không bị từ chối.</description>
     </property>
+    <property>
+        <name>dfs.namenode.heartbeat.recheck-interval</name>
+        <value>30000</value>
+        <description>Thời gian kiểm tra lại nhịp tim của DataNode (30 giây thay vì mặc định 5 phút). Kết hợp với heartbeat.interval, NameNode sẽ xác định DataNode chết sau khoảng 90 giây thay vì 10.5 phút, giúp phát hiện nhanh khi có máy Slave tắt hoặc mất mạng.</description>
+    </property>
+    <property>
+        <name>dfs.heartbeat.interval</name>
+        <value>3</value>
+        <description>Chu kỳ DataNode gửi tín hiệu nhịp tim (heartbeat) về NameNode định kỳ mỗi 3 giây.</description>
+    </property>
 </configuration>

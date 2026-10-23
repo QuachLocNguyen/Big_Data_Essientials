@@ -32,8 +32,8 @@
     </property>
     <property>
         <name>mapreduce.jobhistory.address</name>
-        <value>anh24162006-master:10020</value>
-        <description>Địa chỉ RPC của JobHistoryServer tại máy Master (cổng 10020) để các container báo cáo trạng thái sau khi chạy xong.</description>
+        <value>100.105.99.31:10020</value>
+        <description>Địa chỉ RPC của JobHistoryServer tại máy Master qua Tailscale (cổng 10020) để các container báo cáo trạng thái sau khi chạy xong.</description>
     </property>
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
@@ -47,8 +47,8 @@
     </property>
     <property>
         <name>mapreduce.job.ubertask.enable</name>
-        <value>true</value>
-        <description>Bật chế độ UberTask: cho phép gộp các tác vụ MapReduce nhỏ chạy ngay bên trong container của ApplicationMaster để tiết kiệm thời gian cấp phát container mới.</description>
+        <value>false</value>
+        <description>Tắt chế độ UberTask để các tác vụ MapReduce luôn chạy trong JVM container riêng (YarnChild) có đầy đủ thư viện của Hive (tránh lỗi NoClassDefFoundError: org/apache/commons/collections/CollectionUtils trong uber-SubtaskRunner).</description>
     </property>
     <property>
         <name>yarn.app.mapreduce.am.job.client.port-range</name>
@@ -59,5 +59,30 @@
         <name>mapreduce.client.submit.file.replication</name>
         <value>1</value>
         <description>Giảm số bản sao của file thực thi tạm thời (job.jar) khi gửi job lên HDFS từ 10 xuống 1 để tăng tốc độ khởi tạo job qua mạng VPN.</description>
+    </property>
+    <property>
+        <name>mapreduce.map.maxattempts</name>
+        <value>4</value>
+        <description>Số lần thử lại tối đa cho mỗi Map task (4 lần). Nếu container trên một máy Slave bị lỗi mạng hoặc tắt nguồn, YARN sẽ tự động cấp phát container mới trên máy Slave khác để chạy lại mà không làm hỏng job.</description>
+    </property>
+    <property>
+        <name>mapreduce.reduce.maxattempts</name>
+        <value>4</value>
+        <description>Số lần thử lại tối đa cho mỗi Reduce task (4 lần). Giúp tác vụ tự động chịu lỗi và thử lại khi có máy Slave gặp sự cố.</description>
+    </property>
+    <property>
+        <name>mapreduce.job.maxtaskfailures.per.tracker</name>
+        <value>2</value>
+        <description>Ngưỡng thất bại tối đa trên mỗi máy Slave: Nếu một Slave làm thất bại liên tiếp 2 task của cùng một Job, YARN sẽ tự động đưa Slave đó vào danh sách đen (Blacklist) cho Job hiện tại để chuyển toàn bộ phần việc còn lại sang các Slave khỏe mạnh khác.</description>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>1024</value>
+        <description>Dung lượng RAM cấp phát cho tiến trình điều phối ApplicationMaster (hạ từ 1536 MB xuống 1024 MB để phù hợp với cụm nhỏ 8 GB RAM và không vượt quota Capacity Scheduler).</description>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.command-opts</name>
+        <value>-Xmx820m</value>
+        <description>Giới hạn bộ nhớ Heap JVM của ApplicationMaster (820 MB = xấp xỉ 80% của 1024 MB RAM container, chừa 20% cho vùng nhớ Metaspace/Off-heap của JVM).</description>
     </property>
 </configuration>

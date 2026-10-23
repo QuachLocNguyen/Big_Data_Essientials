@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property>
+        <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
+        <value>0.5</value>
+        <description>Tỷ lệ tài nguyên RAM tối đa trong toàn cụm YARN được phép cấp cho các tiến trình điều phối ApplicationMaster (mặc định 0.1 - 0.2, nâng lên 0.5 tức 50% để cụm nhỏ 8 GB RAM có thể chạy song song nhiều AM mà không bị nghẽn queue).</description>
+    </property>
+    <property>
+        <name>yarn.scheduler.capacity.root.default.maximum-am-resource-percent</name>
+        <value>0.5</value>
+        <description>Tỷ lệ tài nguyên RAM tối đa cấp cho ApplicationMaster trong hàng đợi mặc định (root.default). Với tổng 8 GB RAM cụm, mức 50% cho phép AM sử dụng tới 4096 MB, đủ chỗ cho 4 AM chạy đồng thời.</description>
+    </property>
+</configuration>
+
