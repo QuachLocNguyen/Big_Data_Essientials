@@ -2,7 +2,7 @@
 <configuration>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>100.105.99.31</value>
+        <value>anh24162006-master</value>
         <description>IP Tailscale của máy chủ chạy dịch vụ điều phối tài nguyên trung tâm ResourceManager (nằm tại máy Master).</description>
     </property>
     <property>
