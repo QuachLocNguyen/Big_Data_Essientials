@@ -1,49 +1,79 @@
 # =====================================================================
 # BÀI 3 (SLAVE 2): WORD MEDIAN BẰNG PYSPARK MAPREDUCE
 # Sinh viên thực hiện: Quách Lộc Nguyên - 21139037 (nguyen-slave2)
-# Mục tiêu: Tính trung vị độ dài của các từ trong văn bản (Word Median)
+# Mục tiêu: Tính trung vị độ dài của các từ trong customer_review (Word Median)
+# Hệ thống: Apache Spark 4.2.0 trên cụm Hadoop Cluster (Tailscale VPN)
 # =====================================================================
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
 
-spark = SparkSession.builder \
-    .appName("03_WordMedian_Slave2_Nguyen") \
+spark = (
+    SparkSession.builder
+    .appName("03_WordMedian_CustomerReview_Slave2_Nguyen")
+    .config("spark.driver.host", "nguyen-slave2")
     .getOrCreate()
-sc = spark.sparkContext
+)
 
-# 1. Đọc file văn bản từ HDFS
-lines = sc.textFile("hdfs://anh24162006-master:9000/test_bigdata/input/input_text_big.txt")
+try:
+    # Đọc CSV gốc trực tiếp từ HDFS; hàng đầu là header
+    orders = (
+        spark.read
+        .option("header", "true")
+        .option("quote", '"')
+        .option("escape", "\\")
+        .csv("hdfs://anh24162006-master:9000/ecommerce_dw/staging/raw_orders")
+    )
 
-# 2. Bước MAP: Tách từ và ánh xạ mỗi từ thành cặp (độ_dài_từ, 1)
-words = lines.flatMap(lambda line: line.split())
-length_pairs = words.map(lambda word: (len(word), 1))
+    reviews = orders.select("customer_review").where(
+        col("customer_review").isNotNull()
+        & (col("customer_review").cast("string") != "")
+    )
 
-# 3. Bước REDUCE: Đếm tần suất xuất hiện của từng độ dài từ và sắp xếp tăng dần
-length_counts = length_pairs.reduceByKey(lambda a, b: a + b).sortByKey().collect()
+    # 1. Bước MAP: Tách từ và ánh xạ mỗi từ thành cặp (độ_dài_từ, 1)
+    words = reviews.rdd.flatMap(lambda row: (row["customer_review"] or "").split())
+    length_pairs = words.map(lambda word: (len(word), 1))
 
-# 4. Tìm vị trí chính giữa (Median) từ bảng phân phối tần suất độ dài
-total_words = sum(count for _, count in length_counts)
-mid_pos_1 = (total_words - 1) // 2
-mid_pos_2 = total_words // 2
+    # 2. Bước REDUCE: Đếm tần suất xuất hiện của từng độ dài từ và sắp xếp theo độ dài tăng dần
+    length_counts = length_pairs.reduceByKey(lambda a, b: a + b).sortByKey().collect()
 
-running_count = 0
-val1, val2 = None, None
-for length, count in length_counts:
-    running_count += count
-    if val1 is None and running_count > mid_pos_1:
-        val1 = length
-    if val2 is None and running_count > mid_pos_2:
-        val2 = length
-        break
+    # 3. Tính toán vị trí trung vị (Median) từ bảng phân phối tần suất
+    total_words = sum(count for _, count in length_counts)
 
-word_median = (val1 + val2) / 2.0
+    print("===== BÀI TOÁN MAPREDUCE: TÍNH TRUNG VỊ ĐỘ DÀI TỪ (WORD MEDIAN) =====")
+    print(f"Sinh viên thực hiện: Quách Lộc Nguyên - 21139037 (nguyen-slave2)")
+    print(f"Tổng số từ được xử lý: {total_words:,}")
 
-print("===== PHÂN PHỐI ĐỘ DÀI TỪ (LENGTH -> COUNT) =====")
-for length, count in length_counts:
-    print(f"Độ dài {length:2d} ký tự: {count} từ")
+    if total_words == 0:
+        print("Không tìm thấy từ nào trong customer_review.")
+    else:
+        mid_pos_1 = (total_words - 1) // 2
+        mid_pos_2 = total_words // 2
 
-print("===== KẾT QUẢ TÍNH WORD MEDIAN (TRUNG VỊ ĐỘ DÀI TỪ) =====")
-print(f"Tổng số từ (Total Words)     : {total_words}")
-print(f"Trung vị độ dài (Word Median): {word_median}")
+        running_count = 0
+        val1, val2 = None, None
 
-spark.stop()
+        print("\n===== BẢNG PHÂN PHỐI TẦN SUẤT ĐỘ DÀI TỪ (LENGTH -> COUNT) =====")
+        print(f"{'Độ dài (ký tự)':<18} | {'Số lượng từ':<15} | {'Tỷ lệ (%)':<12} | {'Tích lũy'}")
+        print("-" * 65)
 
+        for length, count in length_counts:
+            running_count += count
+            pct = (count / total_words) * 100.0
+
+            if val1 is None and running_count > mid_pos_1:
+                val1 = length
+            if val2 is None and running_count > mid_pos_2:
+                val2 = length
+
+            marker = " <--- [MEDIAN]" if (length in (val1, val2)) else ""
+            print(f"Độ dài {length:2d} ký tự    | {count:12,d}    | {pct:6.2f}%      | {running_count:10,d}{marker}")
+
+        print("-" * 65)
+        word_median = (val1 + val2) / 2.0
+
+        print(f"Vị trí trung vị cần tra cứu : index #{mid_pos_1:,} và index #{mid_pos_2:,}")
+        print(f"Trung vị độ dài từ vựng     : {word_median:.1f} ký tự")
+        print("=======================================================================")
+
+finally:
+    spark.stop()
