@@ -105,4 +105,19 @@
         <value>3</value>
         <description>Số lần thử lại tối đa cho tiến trình điều phối ApplicationMaster (AM) của ứng dụng.</description>
     </property>
+    <property>
+        <name>yarn.nodemanager.heartbeat.interval-ms</name>
+        <value>400</value>
+        <description>Rút ngắn chu kỳ nhịp tim giữa NodeManager và ResourceManager xuống 400ms (mặc định 1000ms) để RM nhận diện và giao container cho Slave nhanh hơn.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.nodemanagers.heartbeat-interval-ms</name>
+        <value>400</value>
+        <description>Đồng bộ tần suất tiếp nhận nhịp tim của ResourceManager xuống 400ms.</description>
+    </property>
+    <property>
+        <name>yarn.scheduler.capacity.schedule-asynchronously.enable</name>
+        <value>true</value>
+        <description>Bật cơ chế lập lịch bất đồng bộ trên ResourceManager để vòng lặp cấp phát container chạy liên tục độc lập, không phải chờ đợi nhịp tim từ NodeManager.</description>
+    </property>
 </configuration>

@@ -55,4 +55,10 @@
         <value>0.5</value>
         <description>Tỷ lệ tài nguyên RAM tối đa cấp cho ApplicationMaster trong hàng đợi default (50%).</description>
     </property>
+
+    <property>
+        <name>yarn.scheduler.capacity.schedule-asynchronously.scheduling-interval-ms</name>
+        <value>10</value>
+        <description>Chu kỳ vòng lặp lập lịch bất đồng bộ (10ms), giúp RM phân bổ container ngay khi AM yêu cầu.</description>
+    </property>
 </configuration>

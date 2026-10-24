@@ -8,4 +8,5 @@ SELECT
     COUNT(DISTINCT order_id) AS total_orders,
     SUM(CAST(net_sales AS DOUBLE)) AS total_revenue
 FROM ecommerce_dw.staging_orders
-GROUP BY customer_city;
+GROUP BY customer_city
+LIMIT 5;

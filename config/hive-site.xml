@@ -83,12 +83,42 @@
     <property>
         <name>mapreduce.input.fileinputformat.split.maxsize</name>
         <value>16777216</value>
-        <description>Giới hạn kích thước mỗi Input Split là 16 MB (thay vì 256 MB mặc định) để chia file 46.5 MB thành 3 Mappers chạy song song trên các máy Slave thay vì chỉ 1 Mapper.</description>
+        <description>Giới hạn kích thước mỗi Input Split là 16 MB (16777216 bytes) để chia file 46.5 MB thành 3 Mappers chạy song song trên các máy Slave thay vì chỉ 1 Mapper.</description>
+    </property>
+    <property>
+        <name>mapreduce.input.fileinputformat.split.minsize</name>
+        <value>8388608</value>
+        <description>Kích thước tối thiểu của mỗi Input Split là 8 MB để tránh việc sinh quá nhiều split siêu nhỏ.</description>
     </property>
     <property>
         <name>hive.exec.reducers.bytes.per.reducer</name>
         <value>16777216</value>
-        <description>Mỗi Reducer xử lý trung bình 16 MB dữ liệu (thay vì 256 MB mặc định), giúp Hive tự động sinh nhiều Reducers chạy song song khi GROUP BY / JOIN / ORDER BY.</description>
+        <description>Mỗi Reducer xử lý trung bình 16 MB dữ liệu (16777216 bytes), giúp Hive tự động sinh nhiều Reducers chạy song song khi GROUP BY / JOIN / ORDER BY.</description>
+    </property>
+    <property>
+        <name>hive.cbo.enable</name>
+        <value>true</value>
+        <description>Bật Calcite Cost-Based Optimizer (CBO) để Hive tối ưu hóa cây kế hoạch thực thi truy vấn trước khi sinh job MapReduce.</description>
+    </property>
+    <property>
+        <name>hive.compute.query.using.stats</name>
+        <value>true</value>
+        <description>Sử dụng thống kê metadata để trả lời ngay lập tức các câu lệnh đếm số dòng như COUNT(*) mà không cần khởi tạo job MapReduce trên YARN.</description>
+    </property>
+    <property>
+        <name>hive.stats.autogather</name>
+        <value>true</value>
+        <description>Tự động thu thập thống kê số dòng và kích thước bảng khi nạp dữ liệu (LOAD DATA hoặc INSERT).</description>
+    </property>
+    <property>
+        <name>hive.stats.fetch.column.stats</name>
+        <value>true</value>
+        <description>Cho phép Hive lấy thống kê cấp cột để tính toán cost chính xác hơn.</description>
+    </property>
+    <property>
+        <name>hive.stats.fetch.partition.stats</name>
+        <value>true</value>
+        <description>Cho phép Hive lấy thống kê cấp phân vùng nhanh từ Metastore.</description>
     </property>
     <property>
         <name>hive.vectorized.execution.enabled</name>

@@ -75,4 +75,59 @@
         <value>-Xmx820m</value>
         <description>Giới hạn bộ nhớ Heap JVM của ApplicationMaster (820 MB = xấp xỉ 80% của 1024 MB RAM container, chừa 20% cho vùng nhớ Metaspace/Off-heap của JVM).</description>
     </property>
+    <property>
+        <name>yarn.app.mapreduce.am.scheduler.heartbeat.interval-ms</name>
+        <value>300</value>
+        <description>Chu kỳ ApplicationMaster gửi nhịp tim xin tài nguyên tới ResourceManager (giảm từ 1000ms xuống 300ms) để nhận phân bổ container nhanh chóng.</description>
+    </property>
+    <property>
+        <name>mapreduce.job.reduce.slowstart.completedmaps</name>
+        <value>0.80</value>
+        <description>Chỉ bắt đầu cấp phát container cho Reducer khi 80% Map tasks đã hoàn thành (mặc định 5%). Tránh việc Reducer chiếm dụng RAM và container của cụm khi Mapper đang cần chạy.</description>
+    </property>
+    <property>
+        <name>mapreduce.map.output.compress</name>
+        <value>true</value>
+        <description>Nén dữ liệu đầu ra trung gian của Mapper trước khi truyền qua mạng VPN Tailscale sang Reducer.</description>
+    </property>
+    <property>
+        <name>mapreduce.map.output.compress.codec</name>
+        <value>org.apache.hadoop.io.compress.DefaultCodec</value>
+        <description>Bộ codec nén zlib tiêu chuẩn tích hợp sẵn trong Java/Hadoop, đảm bảo tương thích 100% không lo thiếu thư viện native C/C++.</description>
+    </property>
+    <property>
+        <name>mapreduce.job.jvm.numtasks</name>
+        <value>-1</value>
+        <description>Tái sử dụng tiến trình JVM (-1 là không giới hạn) cho các task liên tiếp, loại bỏ hoàn toàn độ trễ khởi động JVM (2-3 giây mỗi task).</description>
+    </property>
+    <property>
+        <name>mapreduce.task.io.sort.mb</name>
+        <value>200</value>
+        <description>Dung lượng bộ nhớ RAM đệm sắp xếp dữ liệu Map output (tăng từ 100 MB lên 200 MB), giúp dữ liệu 16-50 MB được sắp xếp trực tiếp trong RAM mà không cần spill ra đĩa nhiều lần.</description>
+    </property>
+    <property>
+        <name>mapreduce.task.io.sort.factor</name>
+        <value>20</value>
+        <description>Số lượng luồng dữ liệu tối đa được merge đồng thời khi ghi đĩa (tăng từ 10 lên 20).</description>
+    </property>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>1024</value>
+        <description>Dung lượng RAM cấp cho mỗi Map container (1024 MB).</description>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx820m</value>
+        <description>Bộ nhớ Heap cho tiến trình Java Map task (820 MB).</description>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>1024</value>
+        <description>Dung lượng RAM cấp cho mỗi Reduce container (1024 MB).</description>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx820m</value>
+        <description>Bộ nhớ Heap cho tiến trình Java Reduce task (820 MB).</description>
+    </property>
 </configuration>
