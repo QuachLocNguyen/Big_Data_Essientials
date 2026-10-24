@@ -43,6 +43,7 @@ services:
       - ./config/workers:/home/hadoopanh24162006/hadoop/etc/hadoop/workers
       - ./config/workers:/home/hadoopanh24162006/spark/conf/workers
       - ./config/hive-site.xml:/home/hadoopanh24162006/hive/conf/hive-site.xml
+      - ./config/spark-defaults.conf:/home/hadoopanh24162006/spark/conf/spark-defaults.conf
       - ./test_bigdata:/home/hadoopanh24162006/test_bigdata
       - hadoop_data:/home/hadoopanh24162006/hadoop/hdfs
     restart: unless-stopped
